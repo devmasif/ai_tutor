@@ -1,5 +1,0 @@
-Rest of the Lectures can be download from the below link:
-
-https://codex.cs.yale.edu/avi/os-book/OS10/slide-dir/index.html
-
-(The link is working at the time of creating this Text Document)

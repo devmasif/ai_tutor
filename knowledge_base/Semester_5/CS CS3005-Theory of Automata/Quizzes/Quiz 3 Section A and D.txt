@@ -1,7 +1,0 @@
-Section A
-Design CFG for the following language:
-EVEN-EVEN
-
-Section D
-Design CFG for the following language:
-EQUAL-EQUAL
