@@ -29,6 +29,7 @@ def process_image(image_path):
     ocr_image_to_md(image_path, md_path)
     os.remove(image_path)
 
+
 def process_folder(folder):
     for root, dirs, files in os.walk(folder):
         print("Processing folder:", root, "Subfolders:", dirs, "Files:", files)

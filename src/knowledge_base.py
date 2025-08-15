@@ -17,6 +17,7 @@ from langchain_mongodb import MongoDBAtlasVectorSearch
 class MongoKnowledgeBase:
     """MongoDB Atlas-based Knowledge Base with per-user collections"""
     
+    
     def __init__(
             self, 
             user_id: str,

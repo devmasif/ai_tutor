@@ -29,6 +29,8 @@ class VectorVisualizer:
                     print(f"[WARNING] No documents found for visualization")
                     return None, None, None
                 
+                
+                
                 # Extract only what we need
                 vectors = np.array([doc["embedding"] for doc in docs])
                 documents = [doc.get("content", "")[:200] for doc in docs]  # Truncated text for hover

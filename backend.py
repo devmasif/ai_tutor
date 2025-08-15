@@ -37,6 +37,7 @@ MONGO_URI = os.getenv("MONGODB_URI")
 client = MongoClient(MONGO_URI)
 db = client.ai_tutor_db
 
+
 # Collections
 users = db.users
 sessions = db.sessions

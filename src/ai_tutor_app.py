@@ -418,6 +418,7 @@ Only return the JSON, nothing else.
         # Enable live reload for Gradio UI
         self.demo.launch(share=False, debug=True)
 
+
     def __del__(self):
         """Cleanup on app deletion"""
         if self.core:

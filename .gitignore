@@ -1,11 +1,9 @@
-# Python cache files
+# Python cache
 **/__pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
 .Python
 
-# Project specific files
+# Project-specific files
 src/__pycache__/
 rag_tutor/knowledge_base/
 sample.py
@@ -17,19 +15,18 @@ test.py
 .env.*.local
 
 # Vector database
-vectorr_db/
-vector_db/
+vector_db*/
+# The above covers vector_db/ and vectorr_db/
 
-# IDE files
+# IDE/editor files
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# OS files
+# OS-specific files
 .DS_Store
 Thumbs.db
 
 # Logs
 *.log
-logs/
