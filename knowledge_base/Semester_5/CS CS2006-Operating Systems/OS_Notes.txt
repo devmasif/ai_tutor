@@ -1,0 +1,149 @@
+
+---------------------- Chapter 3 : Processes ----------------------
+
+- A process is an active entity
+
+- A process has Text Section (code, constant variables), Data(initialized global and static variables), BSS(uninitialized global and static variables),
+  Stack, Heap, Program Counter(Points to the current instruction to execute)
+
+- Process States: Current Activity of the Processor
+  1. New
+  2. Running
+  3. Waiting
+  4. Ready
+  5. Terminated
+
+- Process Control Block (PCB) or Task Control Block (TCB):
+  It represent a process within the OS. It contains many pieces of information associated with a specific process, including these:
+  1. Process State
+  2. Program Counter
+  3. CPU Regsiters
+  4. CPU scheduling information
+  5. Memory Management Info
+  6. Accounting Information
+  7. I/O Status Information   
+
+- Objective of Multiprogramming:
+  Maximize CPU utilization. To have some process running at all times.
+
+- Objective of Time Sharing:
+  Switch the CPU among processes so frequently that user can interact with each
+  program
+
+- Long-Term/Job Scheduler:
+  Selects processes from mass storage devices and loads them into memory for
+  execution. 
+  Used less frequently. 
+  Controls the Degree of Multiprogramming (number of processes in memory)
+
+- Short-Term Scheduler:
+  Selects from among the processes that are ready to execute and allocates the 
+  CPU to one of them.
+  Frequently used. 
+
+- Context Switching:
+   Switching the CPU to another process requires performing a state save of the current
+   process and a state restoreof a differentprocess. This task is known as a context switch.
+
+- Process Indentifier (PID)
+
+- fork(), wait(), exit(), getpid()
+
+- Zombie, Orphan
+
+----- Interprocess Communication -----
+
+- Independent Process
+
+- Cooperating Process
+
+- Shared Memory, Message Passing
+
+- Message is useful for smaller amounts of data, easier to implement in a 
+  distributed system.
+
+- Shared Memory is typically faster as requires less system calls.
+
+- Signals
+  pthread kill(pthread t tid,int signal)
+
+- Default Signal Handler
+  User Defined Signal Handler
+
+- pthread_cancel(tid)
+  Deferred - pthread_testcancel() - cancellation point
+  Asynchronous
+ https://www.man7.org/linux/man-pages/man3/pthread_setcanceltype.3.html
+
+- cleanup handler
+
+
+---------------------- Chapter 4: Threads ----------------------
+
+- A thread ahs its own Thread ID, Program Counter, Register Set, Stack
+
+- Data Parrallelism
+- Task Parrallelism
+
+- User Threads
+- Kernel
+
+- Many-to-One Model
+  One-to-One Model
+  Many-to-Many Model  
+
+
+- Multicore/Multiprocessor systems
+
+
+
+
+
+
+
+
+
+------- Chapter 6 : Scheduling -----------
+
+
+Theselectionprocessiscarriedoutby the short-term scheduler,orCPU scheduler. The scheduler selects a process
+ from the processes in memory that are ready to execute and allocates the CPU
+ to that process.
+
+As weshall see when we consider the various scheduling algorithms, a ready
+ queue can be implemented as a FIFO queue, a priority queue, a tree, or simply
+ an unordered linked list. Conceptually, however, all the processes in the ready
+ queue are lined up waiting for a chance to run on the CPU.Therecordsinthe
+ queues are generally process control blocks (PCBs) of the processes.
+
+ CPU-scheduling decisions may take place under the following four circum
+stances:
+ 1. Whenaprocess switches from the running state to the waiting state (for
+ example, as the result of an I/O request or an invocation of wait() for
+ the termination of a child process)
+ 2. When a process switches from the running state to the ready state (for
+ example, when an interrupt occurs)
+ 3. When a process switches from the waiting state to the ready state (for
+ example, at completion of I/O)
+ 4. Whenaprocess terminates
+
+When scheduling takes place only under circumstances 1 and 4, we say
+ that the scheduling scheme is nonpreemptive or cooperative.Otherwise,
+ it is preemptive. Under nonpreemptive scheduling, once the CPU has been
+ allocated to a process, the process keeps the CPU until it releases the CPU either
+ by terminating or by switching to the waiting state.
+
+AnothercomponentinvolvedintheCPU-schedulingfunctionisthedispatcher.
+ ThedispatcheristhemodulethatgivescontroloftheCPUtotheprocessselected
+ by the short-term scheduler. This function involves the following:
+ • Switching context
+ • Switching to user mode
+ • Jumpingtotheproperlocationintheuserprogramtorestartthatprogram
+ The dispatcher should be as fast as possible, since it is invoked during every
+ process switch. The time it takes for the dispatcher to stop one process and
+ start another running is known as the dispatch latency.
+
+
+
+
+
