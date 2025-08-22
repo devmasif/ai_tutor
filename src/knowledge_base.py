@@ -34,20 +34,16 @@ class MongoKnowledgeBase:
         # Initialize MongoDB client
         self.mongo_client = MongoClient(self.mongo_uri)
         
-        # Database setup
         self.db_name = "ai_tutor_db"
         
-        # Create user-specific collection name (sanitize for MongoDB compatibility)
         self.collection_name = self._generate_user_collection_name(username)
         self.index_name = f"vector_index_{self._sanitize_name(user_id)}"
         
         self.collection = self.mongo_client[self.db_name][self.collection_name]
         
-        # Initialize components
         self.doc_processor = DocumentProcessor()
         self.embedding_function = OpenAIEmbeddings()
         
-        # Initialize MongoDB Atlas Vector Search with user-specific collection
         self.vectorstore = MongoDBAtlasVectorSearch(
             collection=self.collection,
             embedding=self.embedding_function,
@@ -56,21 +52,13 @@ class MongoKnowledgeBase:
             embedding_key="embedding"
         )
         
-        # Try to create vector search index if needed (non-blocking)
         self._ensure_vector_index()
         
-        print(f"[INFO] MongoKnowledgeBase initialized for user: {self.username}")
-        print(f"[INFO] User Collection: {self.collection_name}")
-        print(f"[INFO] Index: {self.index_name}")
-    
+
     def _sanitize_name(self, name: str) -> str:
-        """Sanitize name for MongoDB collection naming rules"""
-        # Replace invalid characters with underscores
         sanitized = re.sub(r'[^a-zA-Z0-9_]', '_', str(name))
-        # Ensure it starts with letter or underscore
         if sanitized and sanitized[0].isdigit():
             sanitized = f"user_{sanitized}"
-        # Limit length (MongoDB collection names have a 127 byte limit)
         return sanitized[:50]
     
     def _generate_user_collection_name(self,username: str = None) -> str:
@@ -86,14 +74,12 @@ class MongoKnowledgeBase:
     def _ensure_vector_index(self):
         """Ensure vector search index exists for this user's collection"""
         try:
-            # Check if index already exists
             existing_indexes = list(self.collection.list_search_indexes())
             index_exists = any(idx.get('name') == self.index_name for idx in existing_indexes)
             
             if not index_exists:
                 print(f"[INFO] Creating vector search index: {self.index_name}")
                 
-                # Create the vector search index
                 index_definition = {
                     "name": self.index_name,
                     "definition": {
@@ -102,7 +88,7 @@ class MongoKnowledgeBase:
                             "fields": {
                                 "embedding": {
                                     "type": "knnVector",
-                                    "dimensions": 1536,  # OpenAI embedding dimensions
+                                    "dimensions": 1536,  
                                     "similarity": "cosine"
                                 },
                                 "content": {
@@ -342,7 +328,7 @@ class MongoKnowledgeBase:
             
             result = f"MongoDB Atlas Vector store for user {self.username}:\n"
             result += f"- Collection: {self.collection_name}\n"
-            result += f"- Total documents: {total_docs:,}\n"
+            result += f"- Total Chunks: {total_docs:,}\n"
             result += f"- Embedding dimensions: {dimensions:,}\n"
             
             return result

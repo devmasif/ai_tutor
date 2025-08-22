@@ -8,6 +8,7 @@ from langchain_groq import ChatGroq
 from dotenv import load_dotenv
 import os
 
+
 from langchain_openai import ChatOpenAI
 from langchain_mongodb import MongoDBAtlasVectorSearch  
 
@@ -57,7 +58,9 @@ Available Context from User's Documents:
 Instructions:
 1. Generate CONCEPTUAL questions that test understanding, not memorization
 2. If coding topic: include dry run problems, coding challenges, and algorithm analysis
-3. Make questions from the context, one you get the general overview of context 
+3. Don't Create quiz if topics are not available in contexts.
+4. Just reply failed to make a quiz and state reason.
+3. Make questions from the context, once you get the general overview of context 
 and what's been the context it is about , you can generate question out of book.
 4. Focus on "why" and "how" rather than "what" - test deep understanding
 5. Include scenario-based and application questions
@@ -627,27 +630,27 @@ class AITutorCore:
             return f"Error adding content for user {self.username}: {str(e)}"
     
     def show_visualization(self, vis_type):
-        """Show vector visualization"""
+        """Show vector visualization - returns Plotly Figure for gr.Plot"""
         if self.KB.vectorstore is None:
-            return "No knowledge base available. Please add some content first."
+            return None  # gr.Plot handles None gracefully
             
         if not self.visualizer:
             try:
                 self.visualizer = VectorVisualizer(self.KB.vectorstore)
             except Exception as e:
-                return f"Could not initialize visualizer: {str(e)}"
+                print(f"Could not initialize visualizer: {str(e)}")
+                return None
         
         try:
             if vis_type == "2D Visualization":
-                self.visualizer.visualize_2d()
-                return "2D visualization displayed"
+                return self.visualizer.visualize_2d()  # Return Plotly Figure
             elif vis_type == "3D Visualization":
-                self.visualizer.visualize_3d()
-                return "3D visualization displayed"
+                return self.visualizer.visualize_3d()  # Return Plotly Figure
             else:
-                return "Please select a visualization type (2D or 3D)"
+                return None
         except Exception as e:
             return f"Visualization failed: {str(e)}"
+
 
     def get_kb_status(self):
         """Get current knowledge base status"""

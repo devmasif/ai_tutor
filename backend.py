@@ -91,12 +91,7 @@ def hash_password(password: str) -> str:
 def verify_password(password: str, hashed: str) -> bool:
     return bcrypt.checkpw(password.encode('utf-8'), hashed.encode('utf-8'))
 
-def get_user_vector_collection(user_id: str):
-    """Get the vector collection for a specific user"""
-    collection_name = f"user_vectors_{user_id}"
-    return db[collection_name]
 
-# Routes
 @app.get("/")
 async def root():
     return RedirectResponse(url="/docs")
@@ -113,24 +108,12 @@ async def register(user_data: UserRegister):
         "email": user_data.email,
         "password_hash": hash_password(user_data.password),  
         "created_at": datetime.utcnow(),
-        "vector_collection": f"user_vectors_{user_id}"
+        "vector_collection": f"vectors_db_{user_data.username}"
     }
     
     users.insert_one(user_doc)
     token = create_token(user_id)
-    
-    # Initialize empty vector collection for user
-    try:
-        vector_collection = get_user_vector_collection(user_id)
-        vector_collection.create_index([
-            ("user_id", 1),
-            ("doc_type", 1),
-            ("created_at", -1)
-        ])
-        print(f"[INFO] Created vector collection for user: {user_id}")
-    except Exception as e:
-        print(f"[WARNING] Could not initialize vector collection for user {user_id}: {e}")
-    
+     
     return {"message": "User registered", "token": token, "user": {"id": user_id, "username": user_data.username}}
 
 @app.post("/login")
@@ -230,20 +213,17 @@ async def clear_quiz_reports(user_id: str = Depends(verify_token)):
     result = quiz_reports.delete_many({"user_id": user_id})
     return {"message": f"Cleared {result.deleted_count} quiz reports"}
 
+
+
+
+
 if __name__ == "__main__":
     import uvicorn
-    import threading, webbrowser, time
 
     host = "0.0.0.0"
-    port = 8000
-
-    def open_swagger():
-        time.sleep(1.0)
-        webbrowser.open(f"http://127.0.0.1:{port}/docs")
+    port = int(os.getenv("PORT", 8000))  # Railway provides $PORT
 
     print("🚀 Starting AI Tutor Backend with Quiz-Based Tracking")
     print(f"📊 MongoDB URI: {MONGO_URI}")
-    
-    
-    threading.Thread(target=open_swagger, daemon=True).start()
+
     uvicorn.run(app, host=host, port=port)

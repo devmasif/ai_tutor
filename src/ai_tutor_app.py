@@ -4,11 +4,13 @@ import json
 import uuid
 from datetime import datetime
 from src.ai_tutor_core import AITutorCore
+import os
+
 
 class AITutorApp:
     def __init__(self):
-        self.core = None  # Will be initialized when user logs in
-        self.backend_url = "http://localhost:8000"
+        self.core = None  
+        self.backend_url = os.getenv("BACKEND_URL", "http://localhost:8000")
         self.token = None
         self.current_user = None
         self.current_user_id = None
@@ -476,7 +478,12 @@ class AITutorApp:
                             value="2D Visualization"
                         )
                         show_vis_btn = gr.Button("📈 Show Visualization")
-                        vis_output = gr.Textbox(label="Visualization Status", interactive=False)
+                        vis_output = gr.Plot(
+                                label="Vector Visualization", 
+                                show_label=True,
+                                container=True,
+                                scale=1
+                        )
                         
                         # Management
                         gr.Markdown("#### 🗑️ Management")
@@ -569,11 +576,21 @@ class AITutorApp:
         return demo
 
     def launch(self):
+        import os
+    
+        port = int(os.getenv("PORT", 7860))  # Railway gives a PORT env var
+    
         print("🚀 Starting AI Tutor App with Quiz-Based Learning...")
-        print("📝 Make sure the FastAPI backend is running on http://localhost:8000")
+        print(f"📝 FastAPI backend should be running on http://0.0.0.0:{port}")
         print("🎯 Focus: Generate quizzes and track learning through quiz reports")
-        
-        self.demo.launch(share=False, debug=True)
+    
+        self.demo.launch(
+            server_name="0.0.0.0",
+            server_port=port,
+            share=False,
+            debug=True
+        )
+
 
     def __del__(self):
         """Cleanup on app deletion"""

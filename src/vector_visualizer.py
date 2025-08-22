@@ -30,7 +30,6 @@ class VectorVisualizer:
                     return None, None, None
                 
                 
-                
                 # Extract only what we need
                 vectors = np.array([doc["embedding"] for doc in docs])
                 documents = [doc.get("content", "")[:200] for doc in docs]  # Truncated text for hover
@@ -67,7 +66,7 @@ class VectorVisualizer:
 
 
         # Reduce dimensionality
-        tsne = TSNE(n_components=2, random_state=42, perplexity=min(30, len(vectors)-1))
+        tsne = TSNE(n_components=2, random_state=42, perplexity=min(2, len(vectors)-1))
         reduced_vectors = tsne.fit_transform(vectors)
 
         def wrap_text(text, width=80):
@@ -91,11 +90,10 @@ class VectorVisualizer:
             title=f'2D Vector Visualization - {collection_name}',
             xaxis_title='t-SNE Component 1',
             yaxis_title='t-SNE Component 2',
-            width=800,
-            height=600,
+            height=800,
             margin=dict(r=20, b=10, l=10, t=40)
         )
-        fig.show()
+        #fig.show()
         return fig
         
     def visualize_3d(self):
@@ -113,7 +111,7 @@ class VectorVisualizer:
         colors = [color_map[t] for t in doc_types]
 
         # Reduce dimensionality
-        tsne = TSNE(n_components=3, random_state=42, perplexity=min(30, len(vectors)-1))
+        tsne = TSNE(n_components=3, random_state=42, perplexity=min(4, len(vectors)-1))
         reduced_vectors = tsne.fit_transform(vectors)
         
         # Create 3D plot
@@ -133,11 +131,10 @@ class VectorVisualizer:
         fig.update_layout(
             title=f'3D Vector Visualization - {collection_name}',
             scene=dict(xaxis_title='t-SNE 1', yaxis_title='t-SNE 2', zaxis_title='t-SNE 3'),
-            width=900,
-            height=700,
+            height=800,
             margin=dict(r=20, b=10, l=10, t=40)
         )
-        fig.show()
+        #fig.show()
         return fig
     
    
